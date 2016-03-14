@@ -1,15 +1,12 @@
 ﻿# -*- coding: utf-8 -*-
 #-------------------------------------------------------------------------------
-# Name:        XMLmapper
+# Name:        модуль1
 # Author:      Дмитрий Цымай
 #
 #-------------------------------------------------------------------------------
-
 import xml.dom.minidom as dom
 import xml.etree.ElementTree as etree
 import json
-
-
 
 class XmlMmapper:
     """Класс парсера XML
@@ -59,10 +56,10 @@ class XmlMmapper:
         """ Метод для преобразования результатов работы парсера в json формат
         file_json_name - имя файла
         """
-        with open(file_json_name+'.json', 'w'):
-            write(json.dumps(self.filtred_results_of_element, sort_keys=True, indent=4))
+        with open(file_json_name+'.json', 'w') as f:
+            f.write(json.dumps(self.filtred_results_of_element, sort_keys=True, indent=4))
 
-    def tag_filter(self):
+    def tag_filter(self,model_name):
         """Метод для фильтрации тегов
         model_name - имя модели
         """
@@ -124,6 +121,27 @@ class XmlMmapper:
             print(str(". "*level)+"  "+node.nodeName+"  "+str(att_string))
             for child in node.childNodes:
                 self.__output_tree(child, level+1)
+
+
+def main():
+    mapper=XmlMmapper('test.xml')
+    mapper.add_parse_objects('event')
+    #
+    #mapper.add_parse_tags('title','value')
+    mapper.add_parse_tags('runtime','value')
+    mapper.add_parse_tags('age_restricted','value')
+    mapper.add_parse_tags('tags','list')
+    mapper.add_parse_tags('gallery','list')
+    mapper.add_parse_tags('text','value')
+    mapper.add_parse_tags('tag','value')
+    mapper.add_parse_tags('description','value')
+    mapper.add_parse_tags('stage_theatre','value')
+    mapper.find('event')
+    print(mapper.results_of_element)
+    mapper.tojson('test')
+    #print(mapper.is_parse_tag('title'))
+    mapper.tag_filter('model')
+    print(mapper.filtred_results_of_element)
 
 
 def main():

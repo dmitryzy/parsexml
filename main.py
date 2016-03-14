@@ -10,7 +10,7 @@
 #-------------------------------------------------------------------------------
 import XML_mapper
 def main():
-    mapper=XML_mapper.XmlMmapper
+    mapper=XML_mapper.XmlMmapper('test.xml')
     mapper.add_parse_objects('event')
     #
     #mapper.add_parse_tags('title','value')
@@ -23,10 +23,10 @@ def main():
     mapper.add_parse_tags('description','value')
     mapper.add_parse_tags('stage_theatre','value')
     mapper.find('event')
-    #print(mapper.results_of_element[1])
-    #mapper.tojson()
-    #print(mapper.is_parse_tag('title'))
-    mapper.tag_filter()
+    print(mapper.results_of_element[1])
+    mapper.tojson('test')
+    print(mapper.is_parse_tag('title'))
+    mapper.tag_filter('model')
 
 if __name__ == '__main__':
     main()
