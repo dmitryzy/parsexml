@@ -64,7 +64,20 @@ class XmlMmapper:
 
     def tag_filter(self):
         """Метод для фильтрации тегов
+        model_name - имя модели
         """
+        pk=0
+        res=[]
+        for element in self.results_of_element:
+            for obj,tags in element.items():
+                tag_model={"model": model_name,"pk":pk}
+                for tag in tags:
+                    for tag_name,tag_value in tag.items():
+                        if self.is_parse_tag(tag_name):
+                            tag_model.update({tag_name:tag_value})
+                res.append({obj:tag_model})
+                pk+=1
+        self.filtred_results_of_element=res
 
     def find(self,element_name):
         """Метод для поиска заданного элемента
@@ -79,6 +92,17 @@ class XmlMmapper:
         element_name - искомый элемент
         Метод является вспомогательным к find(). Вызывается рекурсивно.
         """
+        res={}
+        res.update({element_name.tag:[]})
+        if len(element_name)==0:
+            if element_name.text!=None:
+                res[element_name.tag].append(element_name.text)
+            if (element_name.attrib!={}):
+                res[element_name.tag].append(element_name.attrib)
+        else:
+            for child in element_name:
+                res[element_name.tag].append(self.__find(child))
+        return res
 
     def output_tree(self):
         """Вывод на печать древа dom XML документа
@@ -91,7 +115,15 @@ class XmlMmapper:
         Вспомогательный метод для output_tree().
         Вызывается рекурсивно
         """
-
+        if node.nodeType == node.TEXT_NODE:
+            if node.nodeValue.strip():
+                print(str(". "*level)+"  "+node.nodeValue.strip())
+        else: # ELEMENT_NODE или DOCUMENT_NODE
+            atts = node.attributes or {}
+            att_string = ", ".join(["%s=%s " % (k, v) for k, v in atts.items()])
+            print(str(". "*level)+"  "+node.nodeName+"  "+str(att_string))
+            for child in node.childNodes:
+                self.__output_tree(child, level+1)
 
 
 def main():
