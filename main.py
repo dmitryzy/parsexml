@@ -8,8 +8,9 @@
 # Copyright:   (c) Дмитрий 2016
 # Licence:     <your licence>
 #-------------------------------------------------------------------------------
-import XMLmapper
+import XML_mapper
 def main():
+    mapper=XML_mapper.XmlMmapper
     mapper.add_parse_objects('event')
     #
     #mapper.add_parse_tags('title','value')
